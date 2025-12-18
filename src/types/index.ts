@@ -1,4 +1,5 @@
 import { Document, Types } from "mongoose";
+import { stringbool } from "zod";
 export interface IUserSession{
   id: string;
   username: string;
@@ -92,7 +93,43 @@ export interface ICompletionModel{
 
 
 
+interface IDocGoal{
+  _id: string;
+  title: string;
+  description: string;
+  journey: {
+    skips: {
+      onWeeks: string[];
+      onEvents: string[];
+    };
+    start: string; //datetime as iso
+    end: string; //datetime as iso
+  }
+  tasklist: {}[];
+  completionsIds: string[]; 
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+export interface IDocCompletion{
+  _id: string;
+  forDay: string; //datetime as iso
+  goalId: string;
+  completes: {
+    id: number;
+    updatedAt: string //datetime as iso
+  }[];
+  createdAt: string; //datetime as iso
+  updatedAt: string; //datetime as iso
+  __v: number;
+}
 
 
-
-
+export interface ICompletion{
+  forDay: string;
+  completes: {
+    id: number;
+    updatedAt: string;
+  }[];
+}

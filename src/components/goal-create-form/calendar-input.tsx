@@ -1,4 +1,11 @@
 "use client";
+
+
+
+// BUG: onChange, resets skips every click
+
+
+
 import { MONTH_NAMES, WEEK_DAYS } from "@/constants";
 import { getUtcDate } from "@/libs/utils";
 import { IJourney } from "@/types";
@@ -19,8 +26,12 @@ const CalendarInput: FC<Props> = ({
   const [start, setStart] = useState<Date|null>(null);
   const [end, setEnd] = useState<Date|null>(null);
   const handleDaySelection = (day: number)=>{
-    console.log("touched");
-    const newDate = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
+    const newDate = new Date(
+      viewDate.getFullYear(),
+      viewDate.getMonth(),
+      day,
+      0, 0, 0, 0
+    );
     if(!start || (start && end)){
       setStart(newDate);
       onChange({
@@ -33,8 +44,16 @@ const CalendarInput: FC<Props> = ({
       });
       setEnd(null);
     }else{
-      const startTime = new Date(start).setHours(0, 0, 0, 0);
-      const endTime = newDate.setHours(0, 0, 0, 0);
+      const startTime = Date.UTC(
+        start.getUTCFullYear(),
+        start.getUTCMonth(),
+        start.getUTCDate()
+      );
+      const endTime = Date.UTC(
+        newDate.getUTCFullYear(),
+        newDate.getUTCMonth(),
+        newDate.getUTCDate()
+      );
       if(endTime<startTime){
         setEnd(start);
         setStart(newDate);
@@ -61,15 +80,15 @@ const CalendarInput: FC<Props> = ({
   }
   const isCurrentMonth = viewDate.getMonth()===new Date().getMonth() && viewDate.getFullYear()===new Date().getFullYear();
   const isPastDay = (day: number)=>{
-    const todayDate = new Date();
-    todayDate.setHours(0, 0, 0, 0);
-    const currentDate = new Date(
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const current = new Date(
       viewDate.getFullYear(),
       viewDate.getMonth(),
       day
     );
-    currentDate.setHours(0, 0, 0, 0);
-    return currentDate<todayDate;
+    current.setHours(0, 0, 0, 0);
+    return current < today;
   }
   const isInSelection = (day: number)=>{
     if(!start){
@@ -106,9 +125,12 @@ const CalendarInput: FC<Props> = ({
     });
   }
   const isToday = (day: number)=>{
+    const now = new Date();
     return (
-      today.getDate()===day && today.getMonth()===viewDate.getMonth() && today.getFullYear()===viewDate.getFullYear()
-    )
+      now.getDate() === day &&
+      now.getMonth() === viewDate.getMonth() &&
+      now.getFullYear() === viewDate.getFullYear()
+    );
   }
   return (
     <div className="flex flex-col gap-4">

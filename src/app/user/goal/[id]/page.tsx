@@ -1,9 +1,9 @@
+import { getBriefGoal } from "@/actions/goals";
+import { readUserSession } from "@/actions/user";
 import CalendarReport from "@/components/calendar-report";
-import { connect } from "@/libs/database";
-import { Goal } from "@/models/goal";
-import { ITask } from "@/types";
-import clsx from "clsx";
-import { robotoMono } from "@/libs/fonts";
+import { getReadableByIso } from "@/libs/utils";
+import { Pencil } from "lucide-react";
+import { getRedirectError } from "next/dist/client/components/redirect";
 interface Props{
   params: Promise<{
     id: string;
@@ -11,35 +11,42 @@ interface Props{
 }
 const page = async ({params}: Props) => {
   const { id } = await params;
-  connect();
-  const goal = await Goal.findById(id);
+  const user = await readUserSession();
+  if(!user){
+    return (
+      <div>user not logged in</div>
+    )
+  }
+  const response = await getBriefGoal(id);
+  if(response.status!==200 || !response.data){
+    return (
+      <div>An unknown error occured</div>
+    )
+  }
+  const { title, description, journey, tasklist, completions } = response.data;
   return (
-    <div>
-      <div className="pt-10 flex flex-col gap-6 w-fit">
-        <h1 className="font-bold text-2xl capitalize">{goal.title}</h1>
-        <p>{goal.description}</p>
-        <div className="flex items-center gap-2">
-          <p className={clsx(
-            robotoMono.className,
-            'font-medium text-green-700'
-          )}>12 may</p>
-          <span className="block w-full bg-gray-200 h-px"></span>
-          <p className={clsx(
-            robotoMono.className,
-            'font-medium text-red-700'
-          )}>12 may</p>
+    <div className="pt-8">
+      <div className="flex items-start flex-col-reverse md:flex-row gap-16">
+        <div className="w-full flex flex-col gap-4">
+          <h1 className="text-2xl font-bold capitalize">{title}</h1>
+          <p>{description}</p>
+          <div className="flex items-center gap-1.5">
+            <p className="text-start font-medium text-green-600">{getReadableByIso(journey.start)}</p>
+            <span className="block w-full h-px bg-black"></span>
+            <p className="text-end font-medium text-red-600">{getReadableByIso(journey.end)}</p>
+          </div>
+          <div>
+            <h1 className="font-medium">Tasklist</h1>
+            <ul className="mt-2 flex flex-col gap-2 justify-start">{tasklist.map((tsk, index: number)=>(
+              <li key={index} className="px-4 py-2 rounded-md bg-rose-200 border-rose-600 border flex justify-between items-center">
+                <p>{tsk.title}</p>
+                <Pencil className="cursor-pointer" size={14} />
+              </li>
+            ))}</ul>
+          </div>
         </div>
-        <div>
-          <h2 className="font-medium text-xl">Your report</h2>
-          <CalendarReport />
-        </div>
-        <div>
-          <h2 className="font-medium text-xl">Tasklist</h2>
-          <ul className="flex flex-col gap-2 mt-4">{
-            goal.tasklist.map((tsk: ITask, index: number)=>(
-              <li className="bg-[#ffe7e7] border border-[#eda6ff] rounded-2xl p-4 flex flex-col" key={index}>{tsk.title}</li>
-            ))
-          }</ul>
+        <div className="w-full">
+          <CalendarReport journey={journey} nTasks={tasklist.length} performances={completions} />
         </div>
       </div>
     </div>
