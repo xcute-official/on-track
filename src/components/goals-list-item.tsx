@@ -17,9 +17,17 @@ const GoalsListItem = ({
     tasklist,
     tasksCompleted,
     _id,
+    journey
   }
 }: Props) => {
   const [showTasklist, setShowTasklist] = useState<boolean>(false);
+  const x = new Date(journey.start);
+  const y = new Date(journey.end);
+  const today = new Date();
+  x.setHours(0, 0, 0, 0);
+  y.setHours(0, 0, 0, 0);
+  today.setHours(0, 0, 0, 0);
+  const isActive = today.getTime()>=x.getTime() && today.getTime()<=y.getTime();
   return (
     <li key={key} className="">
       <div className="bg-[#ffe7e7] border-4 border-[#eda6ff] rounded-2xl p-4 flex flex-col">
@@ -29,7 +37,7 @@ const GoalsListItem = ({
           <Link href={`/user/goal/${_id}`} className="bg-[#ffa6a6] p-2 rounded-xl">
             <Terminal size={14} />
           </Link>
-          <button className="bg-[#ffa6a6] p-2 rounded-xl" onClick={()=>setShowTasklist(!showTasklist)}>
+          <button className="bg-[#ffa6a6] p-2 rounded-xl disabled:opacity-40" disabled={!isActive} onClick={()=>setShowTasklist(!showTasklist)}>
             <ListTodo size={14} />
           </button>
         </div>

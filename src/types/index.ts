@@ -22,6 +22,14 @@ export interface IGoalItem{
   updatedAt: string;
   tasklist: ITask[];
   tasksCompleted: ITaskCompleted[];
+  journey: {
+    start: string;
+    end: string;
+    skips: {
+      onWeeks: number[],
+      onEvents: string[]
+    }
+  }
 }
 export interface ITask{
   id: number;

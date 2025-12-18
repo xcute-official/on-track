@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { StepContextProvder } from "@/components/multi-step-slider";
 import { UserSessionContextProvider } from "@/components/user-session";
-
 export const metadata: Metadata = {
   title: "on track",
   description: "manage and track your progress of your goals",

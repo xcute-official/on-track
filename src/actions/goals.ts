@@ -211,7 +211,15 @@ export const readGoals = async (): Promise<IActionResponse<IGoalItem[]>>=>{
           description: g.description,
           updatedAt: g.updatedAt.toISOString(),
           tasklist: g.tasklist,
-          tasksCompleted: completes
+          tasksCompleted: completes,
+          journey: {
+            start: g.journey.start.toString(),
+            end: g.journey.end.toString(),
+            skips: {
+              onWeeks: [],
+              onEvents: []
+            }
+          }
         }
       }
     ));

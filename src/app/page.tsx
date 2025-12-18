@@ -1,16 +1,10 @@
 import { Key, Lock } from "lucide-react";
 import Link from "next/link";
-import { poppins, robotoMono } from "@/libs/fonts";
+import { poppins } from "@/libs/fonts";
 import clsx from "clsx";
 const page = () => {
   return (
     <div className="w-fit mx-auto mt-64 flex flex-col gap-4 justify-center text-center px-6 py-6">
-      {/* <div>
-        <p className={clsx(
-          "font-bold text-2xl",
-          robotoMono.className
-        )}>On Track</p>
-      </div> */}
       <h1 className={clsx(
         "text-2xl font-bold mx-auto md:w-1/2 w-full",
         poppins.className
