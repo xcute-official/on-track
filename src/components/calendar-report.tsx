@@ -16,7 +16,7 @@ const CalendarReport = ({
   const [start, setStart] = useState<Date>(new Date(journey.start));
   const [end, setEnd] = useState<Date>(new Date(journey.end));
   const isInJourney = (day: number): boolean=>{
-    const forDay = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
+    const forDay = new Date(viewDate.getFullYear(), viewDate.getMonth(), day, 0, 0, 0, 0);
     if(start.getTime()<=forDay.getTime() && end.getTime()>=forDay.getTime()){
       return true;
     }
