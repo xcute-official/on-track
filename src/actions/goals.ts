@@ -30,6 +30,23 @@ interface IBriefGoal{
   }[];
   createdAt: string;
 }
+export const deleteGoal = async (goalId: string): Promise<IActionResponse>=>{
+  try{
+    connect();
+    const deleteIt = await Goal.findByIdAndDelete(goalId);
+    console.log(deleteIt);
+    return {
+      status: 200,
+      success: "ok",
+      redirected: '/user'
+    }
+  }catch(error){
+    return {
+      status: 500,
+      error: "internal server error"
+    }
+  }
+}
 export const getBriefGoal = async (goalId: string): Promise<IActionResponse<IBriefGoal>>=>{
   try{
     connect();

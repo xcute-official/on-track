@@ -1,10 +1,11 @@
 "use client";
-import { IGoalItem } from "@/types";
-import { ListTodo, Terminal } from "lucide-react";
+import { IGoalItem, TTriState } from "@/types";
+import { BinaryIcon, ListTodo, Loader, Terminal, Trash } from "lucide-react";
 import React, { useState } from "react";
 import SlideSheet from "./slide-sheet";
 import TasklistItem from "./tasklist-item";
 import Link from "next/link";
+import { deleteGoal } from "@/actions/goals";
 interface Props{
   key: string;
   goal: IGoalItem;
@@ -21,6 +22,7 @@ const GoalsListItem = ({
   }
 }: Props) => {
   const [showTasklist, setShowTasklist] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<TTriState>(1);
   const x = new Date(journey.start);
   const y = new Date(journey.end);
   const today = new Date();
@@ -28,18 +30,42 @@ const GoalsListItem = ({
   y.setHours(0, 0, 0, 0);
   today.setHours(0, 0, 0, 0);
   const isActive = today.getTime()>=x.getTime() && today.getTime()<=y.getTime();
+  const handleDelete = async ()=>{
+    if(isDeleting===0){
+      return;
+    }
+    try{
+      setIsDeleting(0);
+      const response = await deleteGoal(_id);
+      if(response.status===200){
+        setIsDeleting(-1);
+      }else{
+        setIsDeleting(1);
+      }
+    }catch(error){
+      console.log(error);
+      return;
+    }
+  }
   return (
-    <li key={key} className="">
-      <div className="bg-[#ffe7e7] border-4 border-[#eda6ff] rounded-2xl p-4 flex flex-col">
+    isDeleting ===-1 ? null : <li key={key} className="">
+      <div className="bg-pink-50 border border-[#eda6ff] rounded-2xl p-4 flex flex-col">
         <h2 className="font-bold text-xl">{title}</h2>
         <p className="font-medium mt-1">{description}</p>
         <div className="flex justify-end gap-2 mt-2">
           <Link href={`/user/goal/${_id}`} className="bg-[#ffa6a6] p-2 rounded-xl">
             <Terminal size={14} />
           </Link>
-          <button className="bg-[#ffa6a6] p-2 rounded-xl disabled:opacity-40" disabled={!isActive} onClick={()=>setShowTasklist(!showTasklist)}>
+          <button className="bg-[#ffa6a6] cursor-pointer p-2 rounded-xl disabled:opacity-40" disabled={!isActive} onClick={()=>setShowTasklist(!showTasklist)}>
             <ListTodo size={14} />
           </button>
+          <button disabled={isDeleting<1} onClick={()=>handleDelete()} className="bg-[#ffa6a6] cursor-pointer p-2 rounded-xl disabled:opacity-40">{
+            isDeleting===0 ? (
+              <Loader className="animate-spin" size={14} />
+            ) : (
+              <Trash size={14} />
+            ) 
+          }</button>
         </div>
       </div>
       <SlideSheet show={showTasklist} setShow={()=>setShowTasklist(!showTasklist)}>
