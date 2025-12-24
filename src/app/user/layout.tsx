@@ -7,7 +7,7 @@ const layout = ({children}:{children: ReactNode}) => {
       <header className="fixed top-0 left-0 w-screen px-4 md:px-8 border-b border-b-gray-200 bg-gray-50 h-[6vh] flex items-center">
         <Navigation />
       </header>
-      <main className="px-4 md:px-8 mt-[6vh]">{children}</main>
+      <main className="mt-[6vh]">{children}</main>
     </div>
   );
 };

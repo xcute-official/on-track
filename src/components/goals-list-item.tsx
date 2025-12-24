@@ -49,23 +49,23 @@ const GoalsListItem = ({
   }
   return (
     isDeleting ===-1 ? null : <li key={key} className="">
-      <div className="bg-pink-50 border border-[#eda6ff] rounded-2xl p-4 flex flex-col">
-        <h2 className="font-bold text-xl">{title}</h2>
-        <p className="font-medium mt-1">{description}</p>
-        <div className="flex justify-end gap-2 mt-2">
-          <Link href={`/user/goal/${_id}`} className="bg-[#ffa6a6] p-2 rounded-xl">
+      <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4 flex flex-col gap-4">
+        <h2 className="font-bold text-xl capitalize">{title}</h2>
+        <p className="">{description}</p>
+        <div className="flex justify-end gap-2 mt-2 text-white">
+          <Link href={`/user/goal/${_id}`} className="bg-purple-500 p-2 rounded-xl">
             <Terminal size={14} />
           </Link>
-          <button className="bg-[#ffa6a6] cursor-pointer p-2 rounded-xl disabled:opacity-40" disabled={!isActive} onClick={()=>setShowTasklist(!showTasklist)}>
-            <ListTodo size={14} />
-          </button>
-          <button disabled={isDeleting<1} onClick={()=>handleDelete()} className="bg-[#ffa6a6] cursor-pointer p-2 rounded-xl disabled:opacity-40">{
+          <button disabled={isDeleting<1} onClick={()=>handleDelete()} className="bg-purple-500 cursor-pointer p-2 rounded-xl disabled:opacity-40">{
             isDeleting===0 ? (
               <Loader className="animate-spin" size={14} />
             ) : (
               <Trash size={14} />
             ) 
           }</button>
+          <button className="bg-purple-500 cursor-pointer p-2 rounded-xl disabled:opacity-40" disabled={!isActive} onClick={()=>setShowTasklist(!showTasklist)}>
+            <ListTodo size={14} />
+          </button>
         </div>
       </div>
       <SlideSheet show={showTasklist} setShow={()=>setShowTasklist(!showTasklist)}>

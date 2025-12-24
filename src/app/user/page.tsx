@@ -19,8 +19,8 @@ const page = async () => {
     )
   }
   return (
-    <div className="pt-6">
-      <h1 className="font-medium text-xl">Hi {user.username}</h1>
+    <div className="pt-6 px-4 md:px-8">
+      <h1 className="font-medium text-xl">Hi <span>{user.username}</span></h1>
       <div className="mt-4">{
         response.data.length===0 ? (
           <p>You don't have any goals yet, create one</p>

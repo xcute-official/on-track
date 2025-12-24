@@ -65,7 +65,7 @@ const CalendarReport = ({
   return (
     <div className="w-full flex flex-col gap-2">
       <div className="flex justify-end">
-        <div className="flex items-center gap-0.5 bg-red-200 w-fit px-4 py-2 rounded-full">
+        <div className="flex items-center gap-0.5 border border-slate-200 bg-slate-50 w-fit px-4 py-2 rounded-full">
           <button onClick={()=>handleMonthChange(-1)} className="cursor-pointer">
             <ChevronLeft size={18} />
           </button>
@@ -78,10 +78,10 @@ const CalendarReport = ({
           </button>
         </div>
       </div>
-      <div>
-        <ul className="grid grid-cols-7 bg-purple-100 h-16 items-center rounded-md">{
+      <div className="">
+        <ul className="grid grid-cols-7 border border-gray-200 h-14 items-center rounded-md">{
           WEEK_DAYS.map((day: string, index: number)=>(
-            <li className="text-center" key={index}>{day}</li>
+            <li className="text-center border-r capitalize" key={index}>{day}</li>
           ))  
         }</ul>
         <div className="grid grid-cols-7 gap-2 mt-2">{Array.from({length: firstDayOfMonth}).map((_, i: number)=>(
@@ -92,15 +92,21 @@ const CalendarReport = ({
             const performance = isPerformedForDay(day);
             return (
               <button className={clsx(
-                  isInJourney(day) ? "bg-red-200 rounded-xl" : "bg-pink-100",
-                "flex items-center gap-0.5 flex-col cursor-pointer h-16 justify-center",
+                isInJourney(day) ? "bg-gray-200 rounded-xl" : (
+                  isToday(day) ? "rounded-xl" : "bg-gray-50"
+                ),
+                "flex items-center gap-0.5 flex-col cursor-pointer h-16 justify-center border border-gray-400",
               )} key={day}>
                 <>
                   <span className="">{day}</span>
                   <div>
                     <span></span>
                     <span className="text-xs">{performance && `${(performance.completes.length/nTasks)*100}%`}</span>
-                  </div>
+                  </div>{
+                    isToday(day) && (
+                      <span className="block w-2 h-2 rounded-full bg-blue-700"></span>
+                    )
+                  }
                 </>
               </button>
             )
